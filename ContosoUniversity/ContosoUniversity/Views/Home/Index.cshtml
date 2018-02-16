@@ -1,0 +1,63 @@
+﻿<script type="text/javascript" src="~/Scripts/time.js"></script>
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Terminarz</h1>
+</div>
+
+<font size="6"><div id="czas" onclick="javascript:odswiez();">
+    
+    <script>
+
+        // Nazwy miesięcy
+        var nazwy_mies = ['January', 'February', 'March', 'April', 'May',
+        'June', 'July', 'August', 'September', 'October',
+        'November', 'December'];
+
+        // Odczytanie bieżącej daty i czasu, i rozbicie ich na składowe
+        var data = new Date();
+        var rok = data.getFullYear();
+        var mies = data.getMonth();
+        var dzien = data.getDate();
+        var godz = data.getHours();
+        var min = data.getMinutes();
+        var sec = data.getSeconds();
+
+        // Dodanie zera na początku minut i sekund jeżeli trzeba
+        if (godz < 10)
+        godz = '0' + godz;
+        if (min < 10)
+        min = '0' + min;
+        if (sec < 10)
+        sec = '0' + sec;
+
+        // Utworzenie odpowiednio sformatowanej daty i czasu
+        var data_i_czas = dzien + ' ' + nazwy_mies[mies] + ' ' + rok
+        + ', ' + godz + ':' + min + ':' + sec;
+        document.write(data_i_czas);
+
+    </script>
+</div></font>  <!-- zegarek ****************************** -->
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Welcome to Contoso University</h2>
+        <p>
+            Contoso University is a sample application that
+            demonstrates how to use Entity Framework 6 in an
+            ASP.NET MVC 5 web application.
+        </p>
+    </div>
+    <div class="col-md-4">
+        <h2>Build it from scratch</h2>
+        <p>You can build the application by following the steps in the tutorial series on the ASP.NET site.</p>
+        <p><a class="btn btn-default" href="http://www.asp.net/mvc/tutorials/getting-started-with-ef-using-mvc/">See the tutorial &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Download it</h2>
+        <p>You can download the completed project from the Microsoft Code Gallery.</p>
+        <p><a class="btn btn-default" href="http://code.msdn.microsoft.com/ASPNET-MVC-Application-b01a9fe8">Download &raquo;</a></p>
+    </div>
+</div>

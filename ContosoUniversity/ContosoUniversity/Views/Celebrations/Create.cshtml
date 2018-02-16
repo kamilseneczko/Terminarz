@@ -1,0 +1,317 @@
+﻿<link rel="stylesheet" href="~/Content/calendar.css">
+@model ContosoUniversity.Models.Celebration
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Celebration</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.TypeOfCelebration, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TypeOfCelebration, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TypeOfCelebration, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <!--
+            <div class="form-group">
+            @Html.LabelFor(model => model.CelebrationDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CelebrationDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CelebrationDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+            -->
+        <div class="form-group">
+            <label class="control-label col-md-2" for="CelebrationDate">CelebrationDate</label>
+            <div class="col-md-10">
+                <input class="input-demo7" data-val="true" data-val-date="The field CelebrationDate must be a date." data-val-required="Pole CelebrationDate jest wymagane." id="CelebrationDate" name="CelebrationDate" type="datetime" value="" />
+                <span class="field-validation-valid text-danger" data-valmsg-for="CelebrationDate" data-valmsg-replace="true"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+<p class="demo7">
+    <input type="text" class="input-demo7" style="display:none;">
+    <span class="demo7-text" style="display:none;"></span>
+</p>
+
+<p>
+    <input type="text" class="input-demo6" style="display:none;">
+</p>
+
+
+<script>
+(function() {
+    function Calendar(input, options) {
+        this.now = new Date();
+        this.day = this.now.getDate();
+        this.month = this.now.getMonth();
+        this.year = this.now.getFullYear();
+        this.input = input;
+        this.divCnt = null;
+        this.divTable = null;
+        this.divDateText = null;
+        this.divButtons = null;
+
+        const defaultOptions = {
+            closeOnSelect : false,
+            onDateSelect : function(day, month, year) {
+                const monthText = ((month + 1) < 10) ? "0" + (month + 1) : month + 1;
+                const dayText =  (day < 10) ? "0" + day : day;
+                this.input.value = dayText + '-' + monthText + '-' + this.year;
+            }.bind(this)
+        }
+        this.options = Object.assign({}, defaultOptions, options);
+
+        this.createDateText = function () {
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+            //tworzymy nazwę miesiąca
+
+            this.divDateText.innerHTML = monthNames[this.month] + ' ' + this.year; //czyscimy zawartosc diva
+        };
+
+        //metoda tworząca guziczki
+        this.createButtons = function () {
+            const buttonPrev = document.createElement('button');
+            buttonPrev.innerText = '<';
+            buttonPrev.type = "button";
+            buttonPrev.classList.add('input-prev');
+            buttonPrev.addEventListener('click', function () {
+                this.month--;
+                if (this.month < 0) {
+                    this.month = 11;
+                    this.year--;
+                }
+                this.createCalendarTable();
+                this.createDateText();
+            }.bind(this));
+            this.divButtons.appendChild(buttonPrev);
+
+            const buttonNext = document.createElement('button');
+            buttonNext.classList.add('input-next');
+            buttonNext.innerText = '>';
+            buttonNext.type = "button";
+            buttonNext.addEventListener('click', function () {
+                this.month++;
+                if (this.month > 11) {
+                    this.month = 0;
+                    this.year++;
+                }
+                this.createCalendarTable();
+                this.createDateText();
+            }.bind(this));
+            this.divButtons.appendChild(buttonNext);
+        };
+
+        this.bindTableDaysEvent = function() {
+            this.divTable.addEventListener('click', function(e) {
+
+                if (e.target.tagName.toLowerCase() === 'td' && e.target.classList.contains('day')) {
+                    if (this.options.closeOnSelect) {
+                        this.hide();
+                    }
+                    this.options.onDateSelect(e.target.dayNr, this.month + 1, this.year);
+                }
+
+            }.bind(this));
+        };
+
+        //metoda tworzaca tabele z kalendarzem
+        this.createCalendarTable = function () {
+            this.divTable.innerHTML = '';
+
+            //tworzymy nazwy dni
+            const tab = document.createElement('table');
+            tab.classList.add('calendar-table');
+
+            //tworzymy naglowki dni
+            let tr = document.createElement('tr');
+            tr.classList.add('calendar-table-days-names')
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            for (let i=0; i<days.length; i++) {
+                const th = document.createElement('th');
+                th.innerHTML = days[i];
+                tr.appendChild(th);
+            }
+            tab.appendChild(tr);
+
+            //tworzymy rzędy dni
+            const daysInMonth = new Date(this.year, this.month+1, 0).getDate();
+
+            const tempDate = new Date(this.year, this.month, 1);
+            let firstMonthDay = tempDate.getDay();
+
+            if (firstMonthDay === 0) {
+                firstMonthDay = 7;
+            }
+
+            const j = daysInMonth + firstMonthDay - 1;
+
+            if (firstMonthDay - 1 !== 0) {
+                tr = document.createElement('tr');
+                tab.appendChild(tr);
+            }
+
+            for (let i=0; i < firstMonthDay - 1; i++) {
+                const td = document.createElement('td');
+                td.innerHTML = '';
+                tr.appendChild(td);
+            }
+
+            for (let i = firstMonthDay-1; i<j; i++) {
+                if((i % 7) == 0){
+                    tr = document.createElement('tr');
+                    tab.appendChild(tr);
+                }
+
+                const td = document.createElement('td');
+                td.innerText = i - firstMonthDay + 2;
+                td.dayNr = i - firstMonthDay + 2;
+                td.classList.add('day');
+
+                if (this.year === this.now.getFullYear() && this.month === this.now.getMonth() && this.day === i - firstMonthDay + 2) {
+                    td.classList.add('current-day')
+                }
+
+                tr.appendChild(td);
+            }
+
+            tab.appendChild(tr);
+
+            this.divTable.appendChild(tab);
+        };
+
+        this.toggleShow = function() {
+            this.divCnt.classList.toggle('calendar-show');
+        }
+
+        this.show = function() {
+            this.divCnt.classList.add('calendar-show');
+        }
+
+        this.hide = function() {
+            this.divCnt.classList.remove('calendar-show');
+        }
+
+        //metoda inicjujaca obiekt
+        this.init = function () {
+            //tworzymy div z całą zawartością
+            this.divCnt = document.createElement('div');
+            this.divCnt.classList.add('calendar');
+
+            //tworzymy wrapper dla input
+            this.calendarWrapper = document.createElement('div');
+            this.calendarWrapper.classList.add('input-calendar-cnt');
+            this.input.parentElement.insertBefore(this.calendarWrapper, this.input);
+            this.calendarWrapper.appendChild(this.input);
+
+            //tworzymy div z guzikami
+            this.divButtons = document.createElement('div');
+            this.divButtons.className = "calendar-prev-next";
+            this.createButtons();
+
+            //tworzymy div z nazwą miesiąca
+            this.divDateText = document.createElement('div');
+            this.divDateText.className = 'date-name';
+
+            this.divHeader = document.createElement('div');
+            this.divHeader.classList.add('calendar-header');
+
+            this.divHeader.appendChild(this.divButtons);
+            this.divHeader.appendChild(this.divDateText);
+            this.divCnt.appendChild(this.divHeader);
+            this.createDateText();
+
+            //tworzymy div z tabelą.calendara
+            this.divTable = document.createElement('div');
+            this.divTable.className = 'calendar-table-cnt';
+            this.divCnt.appendChild(this.divTable);
+            this.createCalendarTable();
+            this.bindTableDaysEvent();
+
+            this.input.classList.add('input-calendar');
+            this.input.addEventListener('click', function() {
+                this.toggleShow();
+            }.bind(this));
+
+
+            this.input.addEventListener('click', function(e) {
+                e.stopImmediatePropagation();
+            });
+            this.divCnt.addEventListener('click', function(e) {
+                e.stopImmediatePropagation();
+            });
+
+            document.addEventListener('click', function() {
+                this.hide();
+            }.bind(this));
+
+            //nasz div z zawartością wrzucamy na koniec body
+            this.calendarWrapper.appendChild(this.divCnt);
+        };
+    };
+
+    //metoda dla inputwo - zamienia inputy na kalendarzowe
+    const inp1 = document.querySelector('.input-demo6');
+    //dla 1 inputa wyłączam tylko zamykanie przy wyborze daty
+    const opt1 = {
+        closeOnSelect : false
+    }
+    const cal1 = new Calendar(inp1, opt1);
+    cal1.init();
+
+
+    const inp2 = document.querySelector('.input-demo7');
+    //dla 2 inputa nadpisuję tylko akcję po wyborze daty
+    const opt2 = {
+        closeOnSelect : true,
+        onDateSelect : function(day, month, year) {
+            const dayText = (day < 10) ? '0' + day : day;
+            const monthText = (month < 10) ? '0' + month : month;
+
+            const date = year + '.' + monthText + '.' + dayText;
+            document.querySelector('.demo7-text').innerHTML = 'You have chosen the date: <strong>' + date + '</strong>';
+            inp2.value = date;
+        }
+    }
+    const cal2 = new Calendar(inp2, opt2);
+    cal2.init();
+})();
+</script>

@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Contoso University</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+               @Html.ActionLink("Timetable", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (Session["isUserLogged"] == null || (bool)Session["isUserLogged"] == false)
+                    {
+                        <li>
+                            <a href="/Home/Index">
+
+                                <div>  <i class="fa fa-user fa-sign-in"></i> Home</div>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Home/About">
+
+                                <div>  <i class="fa fa-user fa-sign-in"></i> About</div>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Home/Contact">
+
+                                <div>  <i class="fa fa-user fa-sign-in"></i> Contact</div>
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+
+                        <li>
+                            <a href="/Home/Index">
+
+                                <div>  <i class="fa fa-user fa-sign-in"></i> Home</div>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Home/About">
+
+                                <div>  <i class="fa fa-user fa-sign-in"></i> About</div>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Home/Contact">
+
+                                <div>  <i class="fa fa-user fa-sign-in"></i> Contact</div>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Activity/Index">
+                                <div>  <i class="fa fa-user fa-sign-out"></i>Activity</div>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/Celebrations/Index">
+                                <div>  <i class="fa fa-user fa-sign-out"></i>Celebrations</div>
+                            </a>
+                        </li>
+
+                    }
+                    
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+      <!--  <footer>
+            <p>&copy; @DateTime.Now.Year - Contoso University</p>
+        </footer> -->
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<ContosoUniversity.Models.Celebration>
+
+@{
+    ViewBag.Title = "Celebrations";
+}
+
+<h2>Celebrations</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@using (Html.BeginForm("Index", "Celebrations", FormMethod.Get))
+{
+    <p>
+        Find Celebration: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Type of celebrations", "Index", new { sortOrder = ViewBag.typeSortParm, currentFilter = ViewBag.CurrentFilter})
+     
+        </th>
+        <th>
+            @Html.ActionLink("name", "Index", new { sortOrder = ViewBag.nameSortParm, currentFilter = ViewBag.CurrentFilter})
+            
+        </th>
+        <th>
+            @Html.ActionLink("Day.Month", "Index", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter})
+            
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.TypeOfCelebration)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CelebrationDate.Day).@Html.DisplayFor(modelItem =>  item.CelebrationDate.Month)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
